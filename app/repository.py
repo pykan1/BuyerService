@@ -1,23 +1,32 @@
+from model import ItemModel
+
+
 class Repository:
-    def delete_favorite_item(self):
+    def add_favorite_item(self, item: ItemModel):
         ...
 
-    def delete_basket_item(self):
+    def delete_favorite_item(self, item: ItemModel):
         ...
 
-    def buy_item(self):
+    def add_basket_item(self, item: ItemModel):
         ...
 
-    def cancel_purchase(self):
+    def delete_basket_item(self, item: ItemModel):
         ...
 
-    def add_review(self):
+    def buy_item(self, item: ItemModel):
         ...
 
-    def delete_review(self):
+    def cancel_purchase(self, item: ItemModel):
         ...
 
-    def edit_review(self):
+    def add_review(self, item: ItemModel, chtoto):
+        ...
+
+    def delete_review(self, item: ItemModel, chtoto):
+        ...
+
+    def edit_review(self, item: ItemModel, chtoto):
         ...
 
 
