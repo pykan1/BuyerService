@@ -8,3 +8,8 @@ class ItemModel(BaseModel):
     description: str
     reviews: str
     amount: int
+
+
+class ItemBodyModel(BaseModel):
+    item: ItemModel
+    uuid: str
