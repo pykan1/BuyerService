@@ -2,6 +2,7 @@ from yaml import safe_load
 
 
 class Container:
+
     def __init__(self):
         self.__data = safe_load(open('D:/delivery/backend/BuyerService/config.yml', 'r'))
         self.__db = self.__data["db"]

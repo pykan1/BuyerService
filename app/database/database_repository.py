@@ -1,6 +1,7 @@
 from sqlalchemy import MetaData, create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 
+from container import Container
 from database.database_model import *
 from model import *
 from fastapi_jwt_auth import AuthJWT
@@ -22,3 +23,7 @@ class DatabaseRepository:
             yield db
         finally:
             db.close()
+
+    def new_item(self, db: Session, item: ItemModel):
+        ...
+
