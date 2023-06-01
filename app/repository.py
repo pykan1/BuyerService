@@ -24,35 +24,41 @@ class Repository:
             db.close()
 
     @staticmethod
-    def add_favorite_item(uuid: str, item: ItemModel) -> list:
+    def favorite_by_access_token(access_token):
         with SessionLocal() as db:
-            query = db.query(PersonItems).filter_by(id_person=uuid)
-            favorite = json.loads(str(query.one().favorite))
-            favorite.append(item)
-            query.update(({"favorite": str(favorite)}))
+            return db.query(Token, PersonItems).join(PersonItems, Token.id_person == PersonItems.id_person).filter(
+                Token.access_token == access_token).first()
+
+    def add_favorite_item(self, access_token: str, item: ItemModel) -> None:
+        with SessionLocal() as db:
+            print(self.favorite_by_access_token(access_token))
+            query = db.query(PersonItems).filter_by(id_person=access_token)
+            favorite: list = query.one().favorite
+            favorite.append(item.__dict__)
+            query.update(({"favorite": json.dumps(favorite)}))
             db.commit()
-            return favorite
 
-    def delete_favorite_item(self, uuid: str, item: ItemModel) -> None:
+    def delete_favorite_item(self, access_token: str, item: ItemModel) -> None:
+        with SessionLocal() as db:
+            ...
+
+    def add_basket_item(self, access_token: str, item: ItemModel) -> None:
         ...
 
-    def add_basket_item(self, uuid: str, item: ItemModel) -> None:
+    def delete_basket_item(self, access_token: str, item: ItemModel) -> None:
         ...
 
-    def delete_basket_item(self, uuid: str, item: ItemModel) -> None:
+    def buy_item(self, access_token: str, item: ItemModel) -> None:
         ...
 
-    def buy_item(self, uuid: str, item: ItemModel) -> None:
+    def cancel_purchase(self, access_token: str, item: ItemModel) -> None:
         ...
 
-    def cancel_purchase(self, uuid: str, item: ItemModel) -> None:
+    def add_review(self, access_token: str, item: ItemModel, chtoto) -> None:
         ...
 
-    def add_review(self, uuid: str, item: ItemModel, chtoto) -> None:
+    def delete_review(self, access_token: str, item: ItemModel, chtoto) -> None:
         ...
 
-    def delete_review(self, uuid: str, item: ItemModel, chtoto) -> None:
-        ...
-
-    def edit_review(self, uuid: str, item: ItemModel, chtoto) -> None:
+    def edit_review(self, access_token: str, item: ItemModel, chtoto) -> None:
         ...
