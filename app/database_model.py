@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, UUID
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -56,7 +57,7 @@ class Item(Base):
 class PersonItems(Base):
     __tablename__ = 'person_items'
 
-    id_person = Column(UUID, ForeignKey('person.id_person'), primary_key=True, nullable=False)
-    favorite = Column(Text, nullable=True)
+    id_person = Column(JSONB, ForeignKey('person.id_person'), primary_key=True, nullable=False)
+    favorite = Column(JSONB, nullable=True)
     basket = Column(Text, nullable=True)
     person = relationship('Person')

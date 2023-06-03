@@ -5,6 +5,8 @@ from database_model import *
 from container import Container
 from model import ItemModel
 import json
+import jwt
+from fastapi import HTTPException
 
 meta = MetaData()
 engine = create_engine(Container().db["url"], echo=True)
@@ -24,23 +26,36 @@ class Repository:
             db.close()
 
     @staticmethod
-    def favorite_by_access_token(access_token):
-        with SessionLocal() as db:
-            return db.query(Token, PersonItems).join(PersonItems, Token.id_person == PersonItems.id_person).filter(
-                Token.access_token == access_token).first()
+    def _get_token_data(token):
+        try:
+            return jwt.decode(
+                jwt=token,
+                key=Container().auth["secret_key"],
+                algorithms=["HS256"]
+            )
+        except:
+            raise HTTPException(status_code=406, detail={"message": "token invalid"})
 
     def add_favorite_item(self, access_token: str, item: ItemModel) -> None:
         with SessionLocal() as db:
-            print(self.favorite_by_access_token(access_token))
-            query = db.query(PersonItems).filter_by(id_person=access_token)
-            favorite: list = query.one().favorite
+            user = self._get_token_data(access_token)
+            query = db.query(PersonItems).filter_by(id_person=user["uuid"])
+            favorite = json.loads(query.one().favorite)
             favorite.append(item.__dict__)
             query.update(({"favorite": json.dumps(favorite)}))
             db.commit()
 
     def delete_favorite_item(self, access_token: str, item: ItemModel) -> None:
         with SessionLocal() as db:
-            ...
+            try:
+                user = self._get_token_data(access_token)
+                query = db.query(PersonItems).filter_by(id_person=user["uuid"])
+                favorite: list = json.loads(query.one().favorite)
+                favorite.remove(item.__dict__)
+                query.update(({"favorite": json.dumps(favorite)}))
+                db.commit()
+            except:
+                return None
 
     def add_basket_item(self, access_token: str, item: ItemModel) -> None:
         ...

@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from endpoint import buyer_service
+from endpoint import *
 
 
 def create_app() -> FastAPI():
@@ -27,7 +27,7 @@ app = create_app()
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, port=8000)
+    uvicorn.run(app, port=8080)
 
 
 

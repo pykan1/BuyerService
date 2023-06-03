@@ -12,4 +12,4 @@ class ItemModel(BaseModel):
 
 class ItemBodyModel(BaseModel):
     item: ItemModel
-    uuid: str
+    access_token: str
