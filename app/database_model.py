@@ -48,7 +48,7 @@ class Item(Base):
     id_category = Column(Integer, ForeignKey('category.id_category'), nullable=False)
     name = Column(String(100), nullable=False)
     description = Column(Text)
-    reviews = Column(Text)
+    reviews = Column(JSONB)
     amount = Column(Integer, nullable=False)
 
     category = relationship('Category')
