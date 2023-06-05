@@ -1,9 +1,11 @@
+import uuid
+
 from fastapi import Depends
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, Session
 from database_model import *
 from container import Container
-from model import ItemModel, Review, ReviewModel
+from model import ItemModel, ReviewModel, AddReviewItemModel, GetReviewsItemModel
 import json
 import jwt
 from fastapi import HTTPException
@@ -40,9 +42,9 @@ class Repository:
         with SessionLocal() as db:
             user = self._get_token_data(access_token)
             query = db.query(PersonItems).filter_by(id_person=user["uuid"])
-            favorite = json.loads(query.one().favorite)
+            favorite: list = query.one().favorite
             favorite.append(item.__dict__)
-            query.update(({"favorite": json.dumps(favorite)}))
+            query.update(({"favorite": favorite}))
             db.commit()
 
     def delete_favorite_item(self, access_token: str, item: ItemModel) -> None:
@@ -50,9 +52,9 @@ class Repository:
             try:
                 user = self._get_token_data(access_token)
                 query = db.query(PersonItems).filter_by(id_person=user["uuid"])
-                favorite: list = json.loads(query.one().favorite)
+                favorite: list = query.one().favorite
                 favorite.remove(item.__dict__)
-                query.update(({"favorite": json.dumps(favorite)}))
+                query.update(({"favorite": favorite}))
                 db.commit()
             except:
                 return None
@@ -61,9 +63,9 @@ class Repository:
         with SessionLocal() as db:
             user = self._get_token_data(access_token)
             query = db.query(PersonItems).filter_by(id_person=user["uuid"])
-            basket: list = json.loads(query.one().basket)
+            basket: list = query.one().basket
             basket.append(item.__dict__)
-            query.update({"basket": json.dumps(basket)})
+            query.update({"basket": basket})
             db.commit()
 
     def delete_basket_item(self, access_token: str, item: ItemModel) -> None:
@@ -71,9 +73,9 @@ class Repository:
             try:
                 user = self._get_token_data(access_token)
                 query = db.query(PersonItems).filter_by(id_person=user["uuid"])
-                basket: list = json.loads(query.one().favorite)
+                basket: list = query.one().basket
                 basket.remove(item.__dict__)
-                query.update(({"favorite": json.dumps(basket)}))
+                query.update(({"basket": basket}))
                 db.commit()
             except:
                 return None
@@ -85,17 +87,74 @@ class Repository:
     def cancel_purchase(self, access_token: str, item: ItemModel) -> None:
         ...
 
-    def add_review(self, access_token: str, item: ItemModel, review: ReviewModel) -> None:
+    def get_item_reviews(self, model: GetReviewsItemModel):
         with SessionLocal() as db:
-            query = db.query(Item).filter_by(id_item=item.id_item)
-            reviews: list = json.loads(query.one().reviews)
-            reviews.append(review)
-            query.update({"reviews": json.dumps(reviews)})
+            user = self._get_token_data(model.access_token)
+            reviews = db.query(Item).filter_by(id_item=model.id_item).one().reviews
+            return reviews
+
+    def add_review(self, model: AddReviewItemModel) -> None:
+        with SessionLocal() as db:
+            user = self._get_token_data(model.access_token)
+            query_person = db.query(PersonItems).filter_by(id_person=user["uuid"])
+            query_item = db.query(Item).filter_by(id_item=model.id_item)
+
+            reviews_item: list = query_item.one().reviews
+            reviews_person: list = query_person.one().reviews
+
+            if not reviews_item:
+                reviews_item = []
+            if not reviews_person:
+                reviews_person = []
+
+            reviews_item.append(model.review.__dict__)
+            reviews_person.append(model.review.__dict__)
+
+            query_item.update({"reviews": reviews_item})
+            query_person.update({"reviews": reviews_person})
             db.commit()
 
+    def delete_review(self, model: AddReviewItemModel) -> None:
+        with SessionLocal() as db:
+            try:
+                # сделать какую то проверку на то удаление комента,
+                # ну типо он просто удаляется,
+                # а вообще бы какое нибудь индефицирование пользователя
+                user = self._get_token_data(model.access_token)
+                query_person = db.query(PersonItems).filter_by(id_person=user["uuid"])
+                query_item = db.query(Item).filter_by(id_item=model.id_item)
 
-    def delete_review(self, access_token: str, item: ItemModel, chtoto) -> None:
+                reviews_item: list = query_item.one().reviews
+                reviews_person: list = query_person.one().reviews
+
+                if not reviews_item:
+                    reviews_item = []
+                if not reviews_person:
+                    reviews_person = []
+
+                reviews_item.remove(model.review.__dict__)
+                reviews_person.remove(model.review.__dict__)
+
+                query_item.update({"reviews": reviews_item})
+                query_person.update({"reviews": reviews_person})
+                db.commit()
+            except:
+                return None
+
+    def edit_review(self, model: AddReviewItemModel) -> None:
         ...
 
-    def edit_review(self, access_token: str, item: ItemModel, chtoto) -> None:
-        ...
+    @staticmethod
+    def add_item(item: ItemModel) -> None:
+        print(type(item.id_category))
+        with SessionLocal() as db:
+            db.add(Item(
+                id_item=uuid.uuid4(),
+                id_category=item.id_category,
+                name=item.name,
+                description=item.description,
+                reviews=item.reviews,
+                amount=item.amount
+            ))
+            db.commit()
+        return None

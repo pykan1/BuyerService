@@ -8,19 +8,29 @@ class ItemModel(BaseModel):
     id_category: int
     name: str
     description: str
-    reviews: str
+    reviews: list | None
     amount: int
-
-
-class ItemBodyModel(BaseModel):
-    item: ItemModel
-    access_token: str
 
 
 class ReviewModel(BaseModel):
     login: str
-    date: datetime
+    date: str
     rate: int
     title: str
     body: str
 
+
+class AddItemModel(BaseModel):
+    item: ItemModel
+    access_token: str
+
+
+class GetReviewsItemModel(BaseModel):
+    id_item: str
+    access_token: str
+
+
+class AddReviewItemModel(BaseModel):
+    id_item: str
+    review: ReviewModel
+    access_token: str
