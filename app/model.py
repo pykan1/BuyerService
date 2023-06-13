@@ -34,3 +34,10 @@ class AddReviewItemModel(BaseModel):
     id_item: str
     review: ReviewModel
     access_token: str
+
+
+class OrderModel(BaseModel):
+    coordinates: str
+    item: ItemModel
+    time: str
+    access_token: str

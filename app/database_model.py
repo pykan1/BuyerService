@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, UUID
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, UUID, Float
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -50,6 +50,8 @@ class Item(Base):
     description = Column(Text)
     reviews = Column(JSONB)
     amount = Column(Integer, nullable=False)
+    rate = Column(Float, nullable=True)
+    cost = Column(Integer, nullable=True)
 
     category = relationship('Category')
 
@@ -61,4 +63,5 @@ class PersonItems(Base):
     favorite = Column(JSONB, nullable=True)
     basket = Column(JSONB, nullable=True)
     reviews = Column(JSONB, nullable=True)
+    orders = Column(JSONB, nullable=True)
     person = relationship('Person')

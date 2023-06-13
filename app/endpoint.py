@@ -18,7 +18,7 @@ async def add_favorite_item(body: AddItemModel, service: Service = Depends(Servi
 
 @buyer_service.post("/delete_favorite_item")
 async def add_favorite_item(body: AddItemModel, service: Service = Depends(Service)):
-    return service.delete_favorite_item(item=body.item, uuid=body.access_token)
+    return service.delete_favorite_item(item=body.item, access_token=body.access_token)
 
 
 @buyer_service.post("/add_basket_item")
@@ -43,5 +43,4 @@ async def get_item_reviews(model: GetReviewsItemModel, service: Service = Depend
 
 @buyer_service.post("/add_item")
 async def add_item(model: ItemModel, service: Service = Depends(Service)):
-    print(type(model.id_category))
     return service.create_item(model)

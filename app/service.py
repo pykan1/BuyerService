@@ -6,8 +6,8 @@ class Service:
     def __init__(self):
         self._repository = Repository()
 
-    def delete_favorite_item(self, uuid, item: ItemModel):
-        return self._repository.delete_favorite_item(uuid, item)
+    def delete_favorite_item(self, access_token: str, item: ItemModel):
+        return self._repository.delete_favorite_item(access_token, item)
 
     def add_favorite_item(self, access_token, item: ItemModel):
         return self._repository.add_favorite_item(access_token, item)

@@ -5,7 +5,7 @@ from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, Session
 from database_model import *
 from container import Container
-from model import ItemModel, ReviewModel, AddReviewItemModel, GetReviewsItemModel
+from model import ItemModel, ReviewModel, AddReviewItemModel, GetReviewsItemModel, OrderModel
 import json
 import jwt
 from fastapi import HTTPException
@@ -140,6 +140,14 @@ class Repository:
                 db.commit()
             except:
                 return None
+
+
+    def add_order(self, model: OrderModel):
+        with SessionLocal() as db:
+            user = self._get_token_data(model.access_token)
+            query = db.query(PersonItems).filter_by(id_person=user["uuid"])
+            orders: list = query.one().orders
+            orders.append()
 
     def edit_review(self, model: AddReviewItemModel) -> None:
         ...
