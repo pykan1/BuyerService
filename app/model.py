@@ -10,6 +10,9 @@ class ItemModel(BaseModel):
     description: str
     reviews: list | None
     amount: int
+    rate: float | None = 0.0
+    cost: int | None = 0
+
 
 
 class ReviewModel(BaseModel):

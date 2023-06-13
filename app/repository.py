@@ -141,7 +141,6 @@ class Repository:
             except:
                 return None
 
-
     def add_order(self, model: OrderModel):
         with SessionLocal() as db:
             user = self._get_token_data(model.access_token)
@@ -166,3 +165,18 @@ class Repository:
             ))
             db.commit()
         return None
+
+    async def update_rate_items(self, id_item):
+        with SessionLocal() as db:
+            query = db.query(Item).filter_by(id_item=id_item)
+            sum_rate = 0
+            reviews: list[ReviewModel] = query.one().reviews
+            for i in reviews:
+                sum_rate += i.rate
+            query.update({"rate": sum_rate / len(reviews)})
+
+    def get_items(self, access_token) -> list[ItemModel]:
+        with SessionLocal() as db:
+            query = db.query(Item).all()
+
+
