@@ -44,3 +44,8 @@ async def get_item_reviews(model: GetReviewsItemModel, service: Service = Depend
 @buyer_service.post("/add_item")
 async def add_item(model: ItemModel, service: Service = Depends(Service)):
     return service.create_item(model)
+
+
+@buyer_service.post("/get_items")
+async def get_items(access_token: str, service: Service = Depends(Service)):
+    return service.get_all_items(access_token)

@@ -1,7 +1,6 @@
 import uuid
 from typing import List, Type
 
-from fastapi import Depends
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, Session
 from database_model import *
@@ -147,14 +146,13 @@ class Repository:
             user = self._get_token_data(model.access_token)
             query = db.query(PersonItems).filter_by(id_person=user["uuid"])
             orders: list = query.one().orders
-            orders.append()
+            orders.append(model)
 
     def edit_review(self, model: AddReviewItemModel) -> None:
         ...
 
     @staticmethod
     def add_item(item: ItemModel) -> None:
-        print(type(item.id_category))
         with SessionLocal() as db:
             db.add(Item(
                 id_item=uuid.uuid4(),
@@ -176,15 +174,11 @@ class Repository:
                 for j in reviews:
                     sum_rate += j.rate
                 query.update({"rate": sum_rate / len(reviews)})
-            print("commit all items")
+            print("allcommit")
             db.commit()
 
-    def get_items(self, access_token) -> list[Type[Item]]:
+    @staticmethod
+    def get_items():
         with SessionLocal() as db:
             items = db.query(Item).all()
-            self.update_rate_items(items)
             return items
-
-
-
-

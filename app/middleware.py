@@ -14,8 +14,8 @@ class Middleware:
                     key=Container().auth["secret_key"],
                     algorithms=["HS256"]
                 )
-                function()
+                return function(args[0], args[1])
             except:
-                raise HTTPException(status_code=406, detail={"message": "token invalid"})
+                raise HTTPException(status_code=406, detail="token invalid")
 
         return output
