@@ -1,8 +1,10 @@
+from middleware import Middleware
 from model import *
 from repository import Repository
 
 
 class Service:
+    middleware = Middleware()
     def __init__(self):
         self._repository = Repository()
 
@@ -26,3 +28,7 @@ class Service:
 
     def create_item(self, item: ItemModel):
         return self._repository.add_item(item)
+
+    @middleware.valid_token
+    def get_all_item(self, access_token):
+        self._repository.get_items(access_token)

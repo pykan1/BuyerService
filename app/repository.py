@@ -1,4 +1,5 @@
 import uuid
+from typing import List, Type
 
 from fastapi import Depends
 from sqlalchemy import create_engine, MetaData
@@ -166,17 +167,24 @@ class Repository:
             db.commit()
         return None
 
-    async def update_rate_items(self, id_item):
+    async def update_rate_items(self, items: list[Type[Item]]):
         with SessionLocal() as db:
-            query = db.query(Item).filter_by(id_item=id_item)
-            sum_rate = 0
-            reviews: list[ReviewModel] = query.one().reviews
-            for i in reviews:
-                sum_rate += i.rate
-            query.update({"rate": sum_rate / len(reviews)})
+            for i in items:
+                query = db.query(Item).filter_by(id_item=i.id_item)
+                sum_rate = 0
+                reviews: list[ReviewModel] = query.one().reviews
+                for j in reviews:
+                    sum_rate += j.rate
+                query.update({"rate": sum_rate / len(reviews)})
+            print("commit all items")
+            db.commit()
 
-    def get_items(self, access_token) -> list[ItemModel]:
+    def get_items(self, access_token) -> list[Type[Item]]:
         with SessionLocal() as db:
-            query = db.query(Item).all()
+            items = db.query(Item).all()
+            self.update_rate_items(items)
+            return items
+
+
 
 
