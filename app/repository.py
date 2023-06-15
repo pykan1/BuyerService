@@ -1,6 +1,7 @@
 import uuid
 from typing import List, Type
 
+from fastapi import Depends
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, Session
 from database_model import *
@@ -19,6 +20,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 class Repository:
+
     @staticmethod
     def _get_db():
         db = SessionLocal()
@@ -146,13 +148,14 @@ class Repository:
             user = self._get_token_data(model.access_token)
             query = db.query(PersonItems).filter_by(id_person=user["uuid"])
             orders: list = query.one().orders
-            orders.append(model)
+            orders.append()
 
     def edit_review(self, model: AddReviewItemModel) -> None:
         ...
 
     @staticmethod
     def add_item(item: ItemModel) -> None:
+        print(type(item.id_category))
         with SessionLocal() as db:
             db.add(Item(
                 id_item=uuid.uuid4(),
@@ -174,11 +177,24 @@ class Repository:
                 for j in reviews:
                     sum_rate += j.rate
                 query.update({"rate": sum_rate / len(reviews)})
-            print("allcommit")
+            print("commit all items")
             db.commit()
 
-    @staticmethod
-    def get_items():
+    def get_items(self, access_token) -> list[Type[Item]]:
         with SessionLocal() as db:
             items = db.query(Item).all()
+            self.update_rate_items(items)
             return items
+
+    @staticmethod
+    def get_item_by_id(uuid_item: str):
+        with SessionLocal() as db:
+            item = db.query(Item).filter_by(id_item=uuid_item).first()
+            return item
+
+    def get_items_person(self, list_item: List[str]):
+        lst_item = []
+        for i in list_item:
+            lst_item.append(self.get_item_by_id(i))
+        return lst_item
+

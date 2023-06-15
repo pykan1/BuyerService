@@ -14,7 +14,6 @@ class ItemModel(BaseModel):
     cost: int | None = 0
 
 
-
 class ReviewModel(BaseModel):
     login: str
     date: str
@@ -43,4 +42,14 @@ class OrderModel(BaseModel):
     coordinates: str
     item: ItemModel
     time: str
+    access_token: str
+
+
+class Items:
+    list_uuid: list
+    access_token: str
+
+
+class Item:
+    id_item: str
     access_token: str

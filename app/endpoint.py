@@ -12,8 +12,8 @@ buyer_service = APIRouter(
 
 
 @buyer_service.post("/add_favorite_item")
-async def add_favorite_item(body: AddItemModel, service: Service = Depends(Service)):
-    return service.add_favorite_item(item=body.item, access_token=body.access_token)
+async def add_favorite_item(body: Item, service: Service = Depends(Service)):
+    return service.add_favorite_item(item=body.id_item, access_token=body.access_token)
 
 
 @buyer_service.post("/delete_favorite_item")
@@ -46,6 +46,6 @@ async def add_item(model: ItemModel, service: Service = Depends(Service)):
     return service.create_item(model)
 
 
-@buyer_service.post("/get_items")
-async def get_items(access_token: str, service: Service = Depends(Service)):
-    return service.get_all_items(access_token)
+@buyer_service.post("/get_item")
+async def get_item(uuid: str, service: Service = Depends(Service)):
+    return service.get_item_by_id(uuid)

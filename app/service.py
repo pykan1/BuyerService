@@ -26,11 +26,12 @@ class Service:
     def get_item_reviews(self, getReviewsItemModel: GetReviewsItemModel):
         return self._repository.get_item_reviews(getReviewsItemModel)
 
-    @middleware.valid_token
-    def get_all_items(self, access_token):
-        return self._repository.get_items()
-
     def create_item(self, item: ItemModel):
         return self._repository.add_item(item)
 
+    def get_item_by_id(self, id_item):
+        return self._repository.get_item_by_id(id_item)
 
+    @middleware.valid_token
+    def get_all_item(self, access_token):
+        self._repository.get_items(access_token)
