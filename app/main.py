@@ -20,7 +20,7 @@ def create_app() -> FastAPI():
     )
 
     app.include_router(buyer_service)
-    app.mount("/static", StaticFiles(directory="..image"), name="image")
+    app.mount("/static", StaticFiles(directory="../image"), name="image")
 
     return app
 
