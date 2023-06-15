@@ -55,18 +55,6 @@ class Item(Base):
 
     category = relationship('Category')
 
-    def to_dict(self):
-        return {
-            'id_item': self.id_item,
-            'id_category': self.id_category,
-            'name': self.name,
-            'description': self.description,
-            'reviews': self.reviews,
-            'amount': self.amount,
-            'rate': self.rate,
-            'cost': self.cost
-        }
-
 
 class PersonItems(Base):
     __tablename__ = 'person_items'
