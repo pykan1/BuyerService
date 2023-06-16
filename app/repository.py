@@ -1,3 +1,4 @@
+import base64
 import uuid
 from typing import List, Type
 
@@ -8,7 +9,7 @@ from container import Container
 from model import ItemModel, ReviewModel, AddReviewItemModel, GetReviewsItemModel, OrderModel
 import json
 import jwt
-from fastapi import HTTPException
+from fastapi import HTTPException, Response
 
 meta = MetaData()
 engine = create_engine(Container().db["url"], echo=True)
@@ -170,14 +171,28 @@ class Repository:
     @staticmethod
     def get_items(db: Session):
         items = db.query(Item).all()
+        for i in items:
+            i.img = i.img.get_image_as_base64()
         return items
+
+#i.img.get_image_as_base64()
 
     @staticmethod
     def item_by_id(id_item: str, db: Session):
-        return db.query(Item).filter_by(id_item=id_item).first()
+        item = db.query(Item).filter_by(id_item=id_item).first()
+        item.img = base64.b64encode(item.img).decode('utf-8')
+        return item
 
-    def add_img(self, id_item: str, file: str, db: Session):
+    @staticmethod
+    def add_img(id_item: str, file: str, db: Session):
         with open(f"../image/{file}", "rb") as f:
             image_data = f.read()
         db.query(Item).filter_by(id_item=id_item).update({"img": image_data})
         db.commit()
+
+    @staticmethod
+    def get_image(id_item: str, db: Session):
+        image = db.query(Item).filter(Item.id_item == id_item).first()
+        if image is None:
+            return Response(status_code=404)
+        return Response(content=image.img, media_type='image/jpeg')

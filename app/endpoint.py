@@ -60,18 +60,14 @@ async def get_items(access_token: str, service: Service = Depends(Service), db: 
 
 
 @buyer_service.post("/add_img")
-async def add_item(id_item: str, file: str, db: Session = Depends(Repository().get_db), service: Service = Depends(Service)):
+async def add_item(id_item: str, file: str, db: Session = Depends(Repository().get_db),
+                   service: Service = Depends(Service)):
     return service.add_img(id_item=id_item, file=file, db=db)
 
-@buyer_service.get('/images/{image_id}')
-async def get_image(image_id: str, db: Session = Depends(Repository().get_db)):
-    # Получите изображение из базы данных по идентификатору
-    image = db.query(Item).filter(Item.id_item == image_id).first()
-    if image is None:
-        return Response(status_code=404)
 
-    # Верните изображение в ответе
-    return Response(content=image.img, media_type='image/jpeg')
+@buyer_service.get('/images/{item_id}')
+async def get_image(item_id: str, db: Session = Depends(Repository().get_db), service: Service = Depends(Service)):
+    return service.get_image(id_item=item_id, db=db)
 
 
 @buyer_service.post("/get_item")
