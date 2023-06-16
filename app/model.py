@@ -23,7 +23,7 @@ class ReviewModel(BaseModel):
 
 
 class AddItemModel(BaseModel):
-    item: ItemModel
+    id_item: str
     access_token: str
 
 

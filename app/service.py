@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+
 from middleware import Middleware
 from model import *
 from repository import Repository
@@ -8,30 +10,32 @@ class Service:
     def __init__(self):
         self._repository = Repository()
 
-    def delete_favorite_item(self, access_token: str, item: ItemModel):
-        return self._repository.delete_favorite_item(access_token, item)
+    def delete_favorite_item(self, access_token: str, id_item: str, db: Session):
+        return self._repository.delete_favorite_item(access_token, id_item, db)
 
-    def add_favorite_item(self, access_token, item: ItemModel):
-        return self._repository.add_favorite_item(access_token, item)
+    def add_favorite_item(self, access_token, id_item: str, db: Session):
+        return self._repository.add_favorite_item(access_token, id_item, db)
 
-    def delete_basket_item(self, access_token, item: ItemModel):
-        return self._repository.delete_basket_item(access_token, item)
+    def delete_basket_item(self, access_token, id_item: str, db: Session):
+        return self._repository.delete_basket_item(access_token, id_item, db)
 
-    def add_basket_item(self, access_token, item: ItemModel):
-        return self._repository.add_basket_item(access_token, item)
+    def add_basket_item(self, access_token, id_item: str, db: Session):
+        return self._repository.add_basket_item(access_token, id_item, db)
 
-    def add_review(self, add_review_model: AddReviewItemModel):
-        return self._repository.add_review(add_review_model)
+    def add_review(self, add_review_model: AddReviewItemModel, db: Session):
+        return self._repository.add_review(add_review_model, db)
 
-    def get_item_reviews(self, getReviewsItemModel: GetReviewsItemModel):
-        return self._repository.get_item_reviews(getReviewsItemModel)
-
-    def create_item(self, item: ItemModel):
-        return self._repository.add_item(item)
-
-    def get_item_by_id(self, id_item):
-        return self._repository.get_item_by_id(id_item)
+    def get_item_reviews(self, getReviewsItemModel: GetReviewsItemModel, db: Session):
+        return self._repository.get_item_reviews(getReviewsItemModel, db)
 
     @middleware.valid_token
-    def get_all_item(self, access_token):
-        self._repository.get_items(access_token)
+    def get_all_items(self, access_token, db: Session):
+        return self._repository.get_items(db)
+
+    def item_by_id(self, id_item: str, db: Session):
+        return self._repository.item_by_id(id_item=id_item, db=db)
+
+    def create_item(self, item: ItemModel, db: Session):
+        return self._repository.add_item(item, db)
+
+
