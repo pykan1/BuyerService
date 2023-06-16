@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, UUID, Float
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, UUID, Float, LargeBinary
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -52,6 +52,7 @@ class Item(Base):
     amount = Column(Integer, nullable=False)
     rate = Column(Float, nullable=True)
     cost = Column(Integer, nullable=True)
+    img = Column(LargeBinary, nullable=True)
 
     category = relationship('Category')
 

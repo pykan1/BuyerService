@@ -175,3 +175,9 @@ class Repository:
     @staticmethod
     def item_by_id(id_item: str, db: Session):
         return db.query(Item).filter_by(id_item=id_item).first()
+
+    def add_img(self, id_item: str, file: str, db: Session):
+        with open(f"../image/{file}", "rb") as f:
+            image_data = f.read()
+        db.query(Item).filter_by(id_item=id_item).update({"img": image_data})
+        db.commit()

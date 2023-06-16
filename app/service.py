@@ -38,4 +38,7 @@ class Service:
     def create_item(self, item: ItemModel, db: Session):
         return self._repository.add_item(item, db)
 
+    def add_img(self, id_item: str, file: str, db: Session):
+        return self._repository.add_img(id_item=id_item, file=file, db=db)
+
 

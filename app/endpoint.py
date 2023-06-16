@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
+from database_model import Item
 from model import *
 from repository import Repository
 from service import Service
@@ -56,6 +57,21 @@ async def add_item(model: ItemModel, service: Service = Depends(Service), db: Se
 @buyer_service.post("/get_items")
 async def get_items(access_token: str, service: Service = Depends(Service), db: Session = Depends(Repository().get_db)):
     return service.get_all_items(access_token, db)
+
+
+@buyer_service.post("/add_img")
+async def add_item(id_item: str, file: str, db: Session = Depends(Repository().get_db), service: Service = Depends(Service)):
+    return service.add_img(id_item=id_item, file=file, db=db)
+
+@buyer_service.get('/images/{image_id}')
+async def get_image(image_id: str, db: Session = Depends(Repository().get_db)):
+    # Получите изображение из базы данных по идентификатору
+    image = db.query(Item).filter(Item.id_item == image_id).first()
+    if image is None:
+        return Response(status_code=404)
+
+    # Верните изображение в ответе
+    return Response(content=image.img, media_type='image/jpeg')
 
 
 @buyer_service.post("/get_item")
