@@ -12,7 +12,7 @@ class ItemModel(BaseModel):
     amount: int
     rate: float | None = 0.0
     cost: int | None = 0
-
+    img: str | None
 
 
 class ReviewModel(BaseModel):

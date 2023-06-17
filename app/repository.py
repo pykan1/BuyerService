@@ -1,7 +1,8 @@
 import base64
 import uuid
+import io
 from typing import List, Type
-
+import base64
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, Session
 from database_model import *
@@ -171,8 +172,6 @@ class Repository:
     @staticmethod
     def get_items(db: Session):
         items = db.query(Item).all()
-        for i in items:
-            i.img = i.img.get_image_as_base64()
         return items
 
 #i.img.get_image_as_base64()
@@ -180,19 +179,18 @@ class Repository:
     @staticmethod
     def item_by_id(id_item: str, db: Session):
         item = db.query(Item).filter_by(id_item=id_item).first()
-        item.img = base64.b64encode(item.img).decode('utf-8')
         return item
 
     @staticmethod
     def add_img(id_item: str, file: str, db: Session):
         with open(f"../image/{file}", "rb") as f:
             image_data = f.read()
-        db.query(Item).filter_by(id_item=id_item).update({"img": image_data})
+        db.query(Item).filter_by(id_item=id_item).update({"img": base64.b64encode(image_data).decode('utf-8')})
         db.commit()
 
     @staticmethod
     def get_image(id_item: str, db: Session):
         image = db.query(Item).filter(Item.id_item == id_item).first()
-        if image is None:
+        if image.img is None:
             return Response(status_code=404)
-        return Response(content=image.img, media_type='image/jpeg')
+        return Response(content=base64.b64decode(image.img), media_type='image/jpeg')
