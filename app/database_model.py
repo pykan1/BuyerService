@@ -24,6 +24,7 @@ class Person(Base):
     __tablename__ = 'person'
 
     id_person = Column(UUID, nullable=False, primary_key=True)
+    number = Column(String(12), nullable=False)
     id_role = Column(Integer, ForeignKey('role.id_role'), nullable=False)
     login = Column(String(20), nullable=False)
     user_password = Column(String(1000), nullable=False)
