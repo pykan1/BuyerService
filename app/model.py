@@ -23,6 +23,9 @@ class ReviewModel(BaseModel):
     body: str
 
 
+class AccessTokenModel(BaseModel):
+    access_token: str
+
 class AddItemModel(BaseModel):
     id_item: str
     access_token: str
@@ -37,6 +40,10 @@ class AddReviewItemModel(BaseModel):
     id_item: str
     review: ReviewModel
     access_token: str
+
+
+class GetItemsByCategoryModel(BaseModel, AccessTokenModel):
+    id_category: int
 
 
 class OrderModel(BaseModel):
