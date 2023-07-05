@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, UUID, Float
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, UUID, Float, LargeBinary
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -24,6 +24,7 @@ class Person(Base):
     __tablename__ = 'person'
 
     id_person = Column(UUID, nullable=False, primary_key=True)
+    number = Column(String(12), nullable=False)
     id_role = Column(Integer, ForeignKey('role.id_role'), nullable=False)
     login = Column(String(20), nullable=False)
     user_password = Column(String(1000), nullable=False)
@@ -52,6 +53,7 @@ class Item(Base):
     amount = Column(Integer, nullable=False)
     rate = Column(Float, nullable=True)
     cost = Column(Integer, nullable=True)
+    img = Column(Text, nullable=False)
 
     category = relationship('Category')
 
