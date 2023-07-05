@@ -48,11 +48,12 @@ async def get_item_reviews(model: GetReviewsItemModel, service: Service = Depend
                            db: Session = Depends(Repository().get_db)):
     return service.get_item_reviews(model, db)
 
+
 @buyer_service.post("/get_items_by_category")
-async def get_items_by_category(model: GetItemsByCategoryModel):
-    return ...
-
-
+async def get_items_by_category(model: GetItemsByCategoryModel,
+                                service: Service = Depends(Service),
+                                db: Session = Depends(Repository().get_db)):
+    return service.get_items_by_category(**model, db=db)
 
 
 @buyer_service.post("/add_item")
@@ -60,8 +61,14 @@ async def add_item(model: ItemModel, service: Service = Depends(Service), db: Se
     return service.create_item(model, db)
 
 
+@buyer_service.post("/get_category")
+async def get_category(model: AccessTokenModel, service: Service = Depends(Service), db: Session = Depends(Repository().get_db)):
+    return service.get_category(AccessTokenModel.access_token, db)
+
+
 @buyer_service.post("/get_items")
-async def get_items(body: AccessTokenModel, service: Service = Depends(Service), db: Session = Depends(Repository().get_db)):
+async def get_items(body: AccessTokenModel, service: Service = Depends(Service),
+                    db: Session = Depends(Repository().get_db)):
     return service.get_all_items(body.access_token, db)
 
 

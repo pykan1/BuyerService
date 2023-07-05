@@ -12,7 +12,7 @@ class ItemModel(BaseModel):
     amount: int
     rate: float | None = 0.0
     cost: int | None = 0
-
+    img: str | None
 
 
 class ReviewModel(BaseModel):
@@ -22,6 +22,9 @@ class ReviewModel(BaseModel):
     title: str
     body: str
 
+
+class AccessTokenModel(BaseModel):
+    access_token: str
 
 class AddItemModel(BaseModel):
     id_item: str
@@ -37,6 +40,10 @@ class AddReviewItemModel(BaseModel):
     id_item: str
     review: ReviewModel
     access_token: str
+
+
+class GetItemsByCategoryModel(BaseModel, AccessTokenModel):
+    id_category: int
 
 
 class OrderModel(BaseModel):

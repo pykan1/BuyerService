@@ -194,3 +194,13 @@ class Repository:
         if image.img is None:
             return Response(status_code=404)
         return Response(content=base64.b64decode(image.img), media_type='image/jpeg')
+
+    @staticmethod
+    def get_items_by_category(id_category: int, db: Session):
+        query = db.query(Item).filter_by(id_category = id_category).all()
+        return query
+
+    @staticmethod
+    def get_category(db: Session):
+        query = db.query(Category).all()
+        return query
