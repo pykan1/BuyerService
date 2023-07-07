@@ -63,7 +63,7 @@ async def add_item(model: ItemModel, service: Service = Depends(Service), db: Se
 
 @buyer_service.post("/get_category")
 async def get_category(model: AccessTokenModel, service: Service = Depends(Service), db: Session = Depends(Repository().get_db)):
-    return service.get_category(AccessTokenModel.access_token, db)
+    return service.get_category(model.access_token, db)
 
 
 @buyer_service.post("/get_items")

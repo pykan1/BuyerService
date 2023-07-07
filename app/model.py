@@ -42,7 +42,7 @@ class AddReviewItemModel(BaseModel):
     access_token: str
 
 
-class GetItemsByCategoryModel(BaseModel, AccessTokenModel):
+class GetItemsByCategoryModel(AccessTokenModel):
     id_category: int
 
 

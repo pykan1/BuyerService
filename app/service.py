@@ -44,7 +44,7 @@ class Service:
         return self._repository.add_item(item, db)
 
     def add_img(self, id_item: str, file: str, db: Session):
-        return self._repository.add_img(id_item=id_item, file=file, db=db)
+        return self._repository.add_img(id_category=id_item, file=file, db=db)
 
     def get_image(self, id_item: str, db: Session):
         return self._repository.get_image(id_item, db)

@@ -18,6 +18,7 @@ class Category(Base):
 
     id_category = Column(Integer, primary_key=True)
     category = Column(String, nullable=False, unique=True)
+    img = Column(Text, nullable=True)
 
 
 class Person(Base):
