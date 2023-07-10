@@ -182,10 +182,10 @@ class Repository:
         return item
 
     @staticmethod
-    def add_img(id_category: str, file: str, db: Session):
+    def add_img(id_item: str, file: str, db: Session):
         with open(f"../image/{file}", "rb") as f:
             image_data = f.read()
-        db.query(Category).filter_by(id_category=id_category).update(
+        db.query(Item).filter_by(id_item=id_item).update(
             {"img": base64.b64encode(image_data).decode('utf-8')}
         )
         db.commit()
@@ -198,7 +198,7 @@ class Repository:
         return Response(content=base64.b64decode(image.img), media_type='image/jpeg')
 
     @staticmethod
-    def get_items_by_category(id_category: int, db: Session):
+    def get_items_by_category_repo(id_category: int, db: Session):
         query = db.query(Item).filter_by(id_category=id_category).all()
         return query
 
