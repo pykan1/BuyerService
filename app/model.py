@@ -3,18 +3,6 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class ItemModel(BaseModel):
-    id_item: str
-    id_category: int
-    name: str
-    description: str
-    reviews: list | None
-    amount: int
-    rate: float | None = 0.0
-    cost: int | None = 0
-    img: str | None
-
-
 class ReviewModel(BaseModel):
     login: str
     date: str
@@ -22,9 +10,25 @@ class ReviewModel(BaseModel):
     title: str
     body: str
 
+    def __json__(self):
+        return self.dict()
+
+
+class ItemModel(BaseModel):
+    id_item: str = ""
+    id_category: int = 0
+    name: str = ""
+    description: str = ""
+    reviews: list = []
+    amount: int = 0
+    rate: float = 0.0
+    cost: int = 0
+    img: str = ""
+
 
 class AccessTokenModel(BaseModel):
     access_token: str
+
 
 class AddItemModel(BaseModel):
     id_item: str

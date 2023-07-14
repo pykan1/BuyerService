@@ -200,6 +200,10 @@ class Repository:
     @staticmethod
     def get_items_by_category_repo(id_category: int, db: Session):
         query = db.query(Item).filter_by(id_category=id_category).all()
+        print(id_category)
+        print(query)
+        print("FFFFFFFFFFFFFFFFFFFFFFFFFFFFF")
+        print(json.dumps(query))
         return query
 
     @staticmethod
